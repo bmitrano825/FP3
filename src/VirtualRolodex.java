@@ -301,7 +301,6 @@ public class VirtualRolodex extends JPanel {
         issuesEventList.addAll(contactsList);
         DefaultEventListModel issuesListModel = new DefaultEventListModel(issuesEventList);
         lstContacts = new JList(issuesListModel);
-        GlazedListsSwing.swingThreadProxyList(issuesEventList);
 
         for (int i = 0; i < contactsList.size(); i++) {
             System.out.println(issuesEventList.get(i));
