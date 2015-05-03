@@ -36,12 +36,4 @@ public class Contacts extends VirtualRolodex{
 
         }
     }
-
-    /**
-     * Searches for a tag in the search box and displays possible options.
-     * @param query The tag query.
-     */
-    public void searchContacts(String query) {
-
-    }
 }

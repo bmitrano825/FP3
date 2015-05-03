@@ -26,7 +26,6 @@ public class VirtualRolodex extends JPanel {
     private JTextField txtZip;
     public JButton saveButton;
     private JButton deleteButton;
-    private JTextField txtSearch;
     public JList lstContacts;
     private JTextField txtFirstName;
     private JTextField txtLastName;
@@ -34,12 +33,12 @@ public class VirtualRolodex extends JPanel {
     private JTextField txtAddress;
     private JTextField txtPhoneNumber;
     private JTextField txtFaxNumber;
-    private JTextArea txtTags;
     private JTextField txtCity;
     private JTextField txtEmail;
     public JButton clearButton;
     private JButton closeButton;
     private JScrollPane contactsHolder;
+    private JTextArea txtNotes;
     private EventList issuesEventList = new BasicEventList();
 
     public VirtualRolodex() {
@@ -80,7 +79,7 @@ public class VirtualRolodex extends JPanel {
                 Contact contact = new Contact(txtFirstName.getText(), txtLastName.getText(),
                         txtCompany.getText(), txtPhoneNumber.getText(), txtFaxNumber.getText(),
                         txtEmail.getText(), txtAddress.getText(), txtCity.getText(), txtState.getText(),
-                        txtZip.getText(), txtTags.getText());
+                        txtZip.getText(), txtNotes.getText());
                 try {
                     ContactsDB database = new ContactsDB();
                     database.writeToDatabase(contact);
@@ -97,19 +96,11 @@ public class VirtualRolodex extends JPanel {
                     txtCity.setText("");
                     txtState.setText("");
                     txtZip.setText("");
-                    txtTags.setText("");
+                    txtNotes.setText("");
 
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }
-            }
-        });
-
-
-        txtSearch.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                super.keyTyped(e);
             }
         });
 
@@ -141,7 +132,7 @@ public class VirtualRolodex extends JPanel {
                         txtCity.setText(contact.city);
                         txtState.setText(contact.state);
                         txtZip.setText(contact.zipCode);
-                        txtTags.setText(contact.tags);
+                        txtNotes.setText(contact.notes);
                     } else {
                         txtFirstName.setText("");
                         txtLastName.setText("");
@@ -153,7 +144,7 @@ public class VirtualRolodex extends JPanel {
                         txtCity.setText("");
                         txtState.setText("");
                         txtZip.setText("");
-                        txtTags.setText("");
+                        txtNotes.setText("");
                     }
                 } catch (SQLException e1) {
                     e1.printStackTrace();
@@ -179,7 +170,7 @@ public class VirtualRolodex extends JPanel {
                 txtCity.setText("");
                 txtState.setText("");
                 txtZip.setText("");
-                txtTags.setText("");
+                txtNotes.setText("");
             }
         });
         closeButton.addActionListener(new ActionListener() {
@@ -265,7 +256,7 @@ public class VirtualRolodex extends JPanel {
                 saveButton.setEnabled(true);
             }
         });
-        txtTags.addKeyListener(new KeyAdapter() {
+        txtNotes.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);

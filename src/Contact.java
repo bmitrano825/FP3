@@ -13,7 +13,7 @@ public class Contact extends VirtualRolodex{
     public String city;
     public String state;
     public String zipCode;
-    public String tags;
+    public String notes;
 
     /**
      * The main class.
@@ -21,7 +21,7 @@ public class Contact extends VirtualRolodex{
      */
     public Contact(String firstName, String lastName, String company,
                    String phoneNumber, String faxNumber, String emailAddress, String streetAddress,
-                   String city, String state, String zipCode, String tags)
+                   String city, String state, String zipCode, String notes)
     {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -33,7 +33,7 @@ public class Contact extends VirtualRolodex{
         this.city = city;
         this.state = state;
         this.zipCode = zipCode;
-        this.tags = tags;
+        this.notes = notes;
     }
 
     /**
@@ -199,15 +199,15 @@ public class Contact extends VirtualRolodex{
      * Gets the contacts tags
      * @return The contacts tags.
      */
-    public String getTags() {
-        return tags;
+    public String getNotes() {
+        return notes;
     }
 
     /**
      * Sets the contacts tags.
      * @param tags
      */
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setNotes(String tags) {
+        this.notes = notes;
     }
 }

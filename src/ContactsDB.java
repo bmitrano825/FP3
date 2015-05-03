@@ -68,7 +68,7 @@ public class ContactsDB extends VirtualRolodex {
         String createTableStatement = "create table if not exists contacts(" +
                 "firstName text,  lastName text, companyName text, " +
                 "phoneNumber text, faxNumber text, email text, address text, " +
-                "city text, state text, zip text, tags text);";
+                "city text, state text, zip text, notes text);";
 
         try {
             statement.executeUpdate(createTableStatement);
@@ -109,7 +109,7 @@ public class ContactsDB extends VirtualRolodex {
                             results.getString("city"),
                             results.getString("state"),
                             results.getString("zip"),
-                            results.getString("tags")
+                            results.getString("notes")
                     );
                     contactsList.add(contact);
                 }
@@ -153,7 +153,7 @@ public class ContactsDB extends VirtualRolodex {
             statement.setString(8, contact.city);
             statement.setString(9, contact.state);
             statement.setString(10, contact.zipCode);
-            statement.setString(11, contact.tags);
+            statement.setString(11, contact.notes);
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -195,7 +195,7 @@ public class ContactsDB extends VirtualRolodex {
                     " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
             statement.executeUpdate("UPDATE contacts SET zip=" + contact.zipCode +
                     " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-            statement.executeUpdate("UPDATE contacts SET tags=" + contact.tags +
+            statement.executeUpdate("UPDATE contacts SET notes=" + contact.notes +
                     " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
 
         } catch (SQLException e) {
@@ -229,7 +229,7 @@ public class ContactsDB extends VirtualRolodex {
                                 results.getString("city"),
                                 results.getString("state"),
                                 results.getString("zip"),
-                                results.getString("tags")
+                                results.getString("notes")
                         );
 
                         contactInfo.add(contact);

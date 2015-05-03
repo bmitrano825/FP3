@@ -194,20 +194,20 @@ public class ContactTest {
     }
 
     @Test
-    public void testGetTags() throws Exception {
+    public void testGetNotes() throws Exception {
         Contact contact = new Contact("Brendan","Mitrano","Hairmate",
                 "9785042391","2521515151","bmitrano@live.com","","","","","Brendan");
 
-        assertSame(contact.getTags(),"Brendan");
+        assertSame(contact.getNotes(),"Brendan");
     }
 
     @Test
-    public void testSetTags() throws Exception {
+    public void testSetNotes() throws Exception {
         Contact contact = new Contact("Brendan","Mitrano","Hairmate",
                 "9785042391","2521515151","bmitrano@live.com","","","","","");
 
-        contact.setTags("Brendan");
+        contact.setNotes("Brendan");
 
-        assertSame(contact.tags, "Brendan");
+        assertSame(contact.notes, "Brendan");
     }
 }
