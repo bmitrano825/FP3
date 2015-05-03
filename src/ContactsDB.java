@@ -27,7 +27,6 @@ public class ContactsDB extends VirtualRolodex {
     ArrayList<Contact> contactInfo = new ArrayList<Contact>();
 
 
-
     /**
      * Sets up the connection to the database.
      *
@@ -37,7 +36,7 @@ public class ContactsDB extends VirtualRolodex {
         // Try connecting to the database.
         try {
             dbConnection = DriverManager.getConnection(DB_URL);
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             System.err.println("Couldn't connect to the DB in ContactsDB.");
             throw e;
         }
@@ -51,11 +50,13 @@ public class ContactsDB extends VirtualRolodex {
     public void closeConnection() throws SQLException {
         try {
             dbConnection.close();
-        } catch(SQLException e ){
+        } catch (SQLException e) {
             System.err.println("Couldn't close connection to DB in UsersDB.");
             throw e;
         }
-    };
+    }
+
+    ;
 
     /**
      * Creates the Contacts table in the database if it doesn't already exist.
@@ -64,16 +65,16 @@ public class ContactsDB extends VirtualRolodex {
      */
     public void createContactsTable() throws SQLException {
         Statement statement = dbConnection.createStatement();
-        String createTableStatement = "create table if not exists contacts("+
+        String createTableStatement = "create table if not exists contacts(" +
                 "firstName text,  lastName text, companyName text, " +
                 "phoneNumber text, faxNumber text, email text, address text, " +
                 "city text, state text, zip text, tags text);";
 
         try {
-            statement.executeUpdate( createTableStatement );
+            statement.executeUpdate(createTableStatement);
 
-        } catch(SQLException e){
-            System.err.println("Trouble creating contacts table "+
+        } catch (SQLException e) {
+            System.err.println("Trouble creating contacts table " +
                     "ContactsDB.createContactsTable.");
             throw e;
         } finally {
@@ -96,8 +97,7 @@ public class ContactsDB extends VirtualRolodex {
         try {
             results = statement.executeQuery(query);
             try {
-                while(results.next())
-                {
+                while (results.next()) {
                     Contact contact = new Contact(
                             results.getString("firstName"),
                             results.getString("lastName"),
@@ -110,18 +110,18 @@ public class ContactsDB extends VirtualRolodex {
                             results.getString("state"),
                             results.getString("zip"),
                             results.getString("tags")
-                            );
+                    );
                     contactsList.add(contact);
                 }
-            } catch(SQLException e){
-                System.err.println("Trouble accessing iterating through "+
+            } catch (SQLException e) {
+                System.err.println("Trouble accessing iterating through " +
                         "results in ContactsDB.getAllContacts.");
                 throw e;
             } finally {
                 results.close();
             }
-        } catch(SQLException e){
-            System.err.println("Trouble accessing getting results in "+
+        } catch (SQLException e) {
+            System.err.println("Trouble accessing getting results in " +
                     "ContactsDB.getAllContacts.");
             throw e;
         } finally {
@@ -156,9 +156,9 @@ public class ContactsDB extends VirtualRolodex {
             statement.setString(11, contact.tags);
 
             statement.executeUpdate();
-        } catch(SQLException e){
-            System.err.println("Trouble inserting user into table in "+
-                    "ContactsDB.writeToDatabase; Contact: "+ contact.firstName + contact.lastName);
+        } catch (SQLException e) {
+            System.err.println("Trouble inserting user into table in " +
+                    "ContactsDB.writeToDatabase; Contact: " + contact.firstName + contact.lastName);
             throw e;
         } finally {
             statement.close();
@@ -167,42 +167,42 @@ public class ContactsDB extends VirtualRolodex {
 
     /**
      * Updates the existing contacts information.
+     *
      * @param contact
      * @throws SQLException
      */
-    public void updateExistingContact(Contact contact) throws SQLException{
+    public void updateExistingContact(Contact contact) throws SQLException {
         Statement statement = dbConnection.createStatement();
 
         try {
-                statement.executeUpdate("UPDATE contacts SET firstName=" + contact.firstName +
-                        " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-                statement.executeUpdate("UPDATE contacts SET lastName=" + contact.lastName +
-                        " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-                statement.executeUpdate("UPDATE contacts SET companyName=" + contact.company +
-                        " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-                statement.executeUpdate("UPDATE contacts SET phoneNumber=" + contact.phoneNumber +
-                        " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-                statement.executeUpdate("UPDATE contacts SET faxNumber=" + contact.faxNumber +
-                        " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-                statement.executeUpdate("UPDATE contacts SET email=" + contact.emailAddress +
-                        " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-                statement.executeUpdate("UPDATE contacts SET address=" + contact.streetAddress +
-                        " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-                statement.executeUpdate("UPDATE contacts SET city=" + contact.city +
-                        " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-                statement.executeUpdate("UPDATE contacts SET state=" + contact.state +
-                        " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-                statement.executeUpdate("UPDATE contacts SET zip=" + contact.zipCode +
-                        " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-                statement.executeUpdate("UPDATE contacts SET tags=" + contact.tags +
-                        " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
+            statement.executeUpdate("UPDATE contacts SET firstName=" + contact.firstName +
+                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
+            statement.executeUpdate("UPDATE contacts SET lastName=" + contact.lastName +
+                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
+            statement.executeUpdate("UPDATE contacts SET companyName=" + contact.company +
+                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
+            statement.executeUpdate("UPDATE contacts SET phoneNumber=" + contact.phoneNumber +
+                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
+            statement.executeUpdate("UPDATE contacts SET faxNumber=" + contact.faxNumber +
+                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
+            statement.executeUpdate("UPDATE contacts SET email=" + contact.emailAddress +
+                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
+            statement.executeUpdate("UPDATE contacts SET address=" + contact.streetAddress +
+                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
+            statement.executeUpdate("UPDATE contacts SET city=" + contact.city +
+                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
+            statement.executeUpdate("UPDATE contacts SET state=" + contact.state +
+                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
+            statement.executeUpdate("UPDATE contacts SET zip=" + contact.zipCode +
+                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
+            statement.executeUpdate("UPDATE contacts SET tags=" + contact.tags +
+                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
 
-        }
-
-        catch (SQLException e){
+        } catch (SQLException e) {
 
         }
     }
+
     /**
      * Loads the contact from the database based on their id which
      * is assigned automatically.
@@ -255,6 +255,7 @@ public class ContactsDB extends VirtualRolodex {
 
     /**
      * Loads the contact list array with contact info.
+     *
      * @return The list of contacts.
      * @throws SQLException
      */
@@ -268,8 +269,7 @@ public class ContactsDB extends VirtualRolodex {
         try {
             results = statement.executeQuery(query);
             try {
-                while(results.next())
-                {
+                while (results.next()) {
                     String company = results.getString("companyName");
                     String first = results.getString("firstName");
                     String last = results.getString("lastName");
@@ -279,16 +279,15 @@ public class ContactsDB extends VirtualRolodex {
                 fillList(contactList);
 
 
-
-            } catch(SQLException e){
-                System.err.println("Trouble accessing iterating through "+
+            } catch (SQLException e) {
+                System.err.println("Trouble accessing iterating through " +
                         "results in UsersDB.getAllUsers.");
                 throw e;
             } finally {
                 results.close();
             }
-        } catch(SQLException e){
-            System.err.println("Trouble accessing getting results in "+
+        } catch (SQLException e) {
+            System.err.println("Trouble accessing getting results in " +
                     "ContactsDB.loadContactsList()");
             throw e;
         } finally {
@@ -300,30 +299,31 @@ public class ContactsDB extends VirtualRolodex {
      * Erases the contact from the database based on their
      * id which is assigned automatically.
      */
-    public void eraseFromDatabase(int index) throws SQLException{
+    public void eraseFromDatabase(int index) throws SQLException {
         Statement statement = dbConnection.createStatement();
-        String deleteContact = "DELETE * from contacts WHERE rowid="+index+";";
+        String deleteContact = "DELETE * from contacts WHERE rowid=" + index + ";";
 
 
-            try {
-                statement.executeUpdate(deleteContact);
-                contactList.remove(lstContacts.getSelectedIndex());
-                resortContacts();
-            } catch (SQLException e) {
-                System.err.println("Trouble deleting from database " +
-                        "ContactsDB.eraseFromDatabase.");
-                throw e;
-            } finally {
-                statement.close();
-            }
+        try {
+            statement.executeUpdate(deleteContact);
+            contactList.remove(lstContacts.getSelectedIndex());
+            resortContacts();
+        } catch (SQLException e) {
+            System.err.println("Trouble deleting from database " +
+                    "ContactsDB.eraseFromDatabase.");
+            throw e;
+        } finally {
+            statement.close();
+        }
 
     }
 
     /**
      * Re-sorts the contact list after an item is deleted or added.
+     *
      * @throws SQLException
      */
-    public void resortContacts() throws SQLException{
+    public void resortContacts() throws SQLException {
         Statement statement = dbConnection.createStatement();
         String sortContents = "SELECT * FROM contacts ORDER BY companyName ASC;";
 
@@ -337,8 +337,6 @@ public class ContactsDB extends VirtualRolodex {
             System.err.println("Trouble deleting from database " +
                     "ContactsDB.eraseFromDatabase.");
             throw e;
-        } #PAQUIAUMELTED STEAL BEAMS ON DataBufferShort
-
-        EVERY(ONE is here bush did 9/11 dick chaneyh mande money off the iraq war and everypone loves raymond is on a seriuous bender for everyone
-
-        "
+        }
+    }
+}
