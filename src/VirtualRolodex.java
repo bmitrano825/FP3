@@ -11,6 +11,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +38,8 @@ public class VirtualRolodex extends JPanel {
     private JTextField txtEmail;
     public JButton clearButton;
     private JButton closeButton;
-    private JScrollPane contactsHolder;
     private JTextArea txtNotes;
-    private EventList issuesEventList = new BasicEventList();
-
+    private DefaultListModel listmodel;
     public VirtualRolodex() {
         saveButton.setEnabled(false);
         lstContacts.setSelectedIndex(0);
@@ -53,15 +52,22 @@ public class VirtualRolodex extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Contacts contacts = new Contacts();
-
 
                 try {
                     ContactsDB database = new ContactsDB();
+                    database.eraseFromDatabase(lstContacts.getSelectedIndex());
 
-
-                    contacts.deleteContact(lstContacts.getSelectedIndex());
-                    database.eraseFromDatabase(lstContacts.getSelectedIndex() + 1);
+                    txtFirstName.setText("");
+                    txtLastName.setText("");
+                    txtCompany.setText("");
+                    txtPhoneNumber.setText("");
+                    txtFaxNumber.setText("");
+                    txtEmail.setText("");
+                    txtAddress.setText("");
+                    txtCity.setText("");
+                    txtState.setText("");
+                    txtZip.setText("");
+                    txtNotes.setText("");
 
                 } catch (SQLException e1) {
                     e1.printStackTrace();
@@ -82,22 +88,26 @@ public class VirtualRolodex extends JPanel {
                         txtZip.getText(), txtNotes.getText());
                 try {
                     ContactsDB database = new ContactsDB();
-                    database.writeToDatabase(contact);
-                    contacts.editContact(contact);
+                    if (lstContacts.getSelectedIndex() == 0) {
+                        database.writeToDatabase(contact);
+                    }
+                    else {
+                        database.updateExistingContact(contact);
+                    }
                     saveButton.setEnabled(false);
-
-                    txtFirstName.setText("");
-                    txtLastName.setText("");
-                    txtCompany.setText("");
-                    txtPhoneNumber.setText("");
-                    txtFaxNumber.setText("");
-                    txtEmail.setText("");
-                    txtAddress.setText("");
-                    txtCity.setText("");
-                    txtState.setText("");
-                    txtZip.setText("");
-                    txtNotes.setText("");
-
+                    if(lstContacts.getSelectedIndex() == 0) {
+                        txtFirstName.setText("");
+                        txtLastName.setText("");
+                        txtCompany.setText("");
+                        txtPhoneNumber.setText("");
+                        txtFaxNumber.setText("");
+                        txtEmail.setText("");
+                        txtAddress.setText("");
+                        txtCity.setText("");
+                        txtState.setText("");
+                        txtZip.setText("");
+                        txtNotes.setText("");
+                    }
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }
@@ -287,15 +297,19 @@ public class VirtualRolodex extends JPanel {
         System.out.println("Press [L] to view a list of contacts by company name.");
     }
 
-    public void fillList(EventList<String> contactsList) {
-        issuesEventList.clear();
-        issuesEventList.addAll(contactsList);
-        DefaultEventListModel issuesListModel = new DefaultEventListModel(issuesEventList);
-        lstContacts = new JList(issuesListModel);
+    public void fillList(ArrayList<String> contactsList) {
+        listmodel = new DefaultListModel();
+
+        if (listmodel.size() > 0){
+            listmodel.clear();
+        }
 
         for (int i = 0; i < contactsList.size(); i++) {
-            System.out.println(issuesEventList.get(i));
+            listmodel.addElement(contactsList.get(i));
+            System.out.println(listmodel.get(i));
         }
+        lstContacts.setModel(listmodel);
+        lstContacts.setListData(listmodel.toArray());
     }
 }
 

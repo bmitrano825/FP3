@@ -23,7 +23,7 @@ public class ContactsDB extends VirtualRolodex {
     private final static String JDBC = "jdbc:sqlite";
     private final static String DB_URL = JDBC + ":" + DB_NAME;
     private Connection dbConnection;
-    EventList<String> contactList = new BasicEventList<String>();
+    ArrayList<String> contactList = new ArrayList<String>();
     ArrayList<Contact> contactInfo = new ArrayList<Contact>();
 
 
@@ -138,31 +138,31 @@ public class ContactsDB extends VirtualRolodex {
      * @throws SQLException
      */
     public void writeToDatabase(Contact contact) throws SQLException {
-        String insertStatement = "insert into contacts values(?,?,?,?,?,?,?,?,?,?,?)";
-        PreparedStatement statement =
-                dbConnection.prepareStatement(insertStatement);
+            String insertStatement = "insert into contacts values(?,?,?,?,?,?,?,?,?,?,?)";
+            PreparedStatement statement =
+                    dbConnection.prepareStatement(insertStatement);
 
-        try {
-            statement.setString(1, contact.firstName);
-            statement.setString(2, contact.lastName);
-            statement.setString(3, contact.company);
-            statement.setString(4, contact.phoneNumber);
-            statement.setString(5, contact.faxNumber);
-            statement.setString(6, contact.emailAddress);
-            statement.setString(7, contact.streetAddress);
-            statement.setString(8, contact.city);
-            statement.setString(9, contact.state);
-            statement.setString(10, contact.zipCode);
-            statement.setString(11, contact.notes);
+            try {
+                statement.setString(1, contact.firstName);
+                statement.setString(2, contact.lastName);
+                statement.setString(3, contact.company);
+                statement.setString(4, contact.phoneNumber);
+                statement.setString(5, contact.faxNumber);
+                statement.setString(6, contact.emailAddress);
+                statement.setString(7, contact.streetAddress);
+                statement.setString(8, contact.city);
+                statement.setString(9, contact.state);
+                statement.setString(10, contact.zipCode);
+                statement.setString(11, contact.notes);
 
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("Trouble inserting user into table in " +
-                    "ContactsDB.writeToDatabase; Contact: " + contact.firstName + contact.lastName);
-            throw e;
-        } finally {
-            statement.close();
-        }
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println("Trouble inserting user into table in " +
+                        "ContactsDB.writeToDatabase; Contact: " + contact.firstName + contact.lastName);
+                throw e;
+            } finally {
+                statement.close();
+            }
     }
 
     /**
@@ -173,34 +173,29 @@ public class ContactsDB extends VirtualRolodex {
      */
     public void updateExistingContact(Contact contact) throws SQLException {
         Statement statement = dbConnection.createStatement();
+        eraseFromDatabase(lstContacts.getSelectedIndex());
+//        writeToDatabase(contact);
 
-        try {
-            statement.executeUpdate("UPDATE contacts SET firstName=" + contact.firstName +
-                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-            statement.executeUpdate("UPDATE contacts SET lastName=" + contact.lastName +
-                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-            statement.executeUpdate("UPDATE contacts SET companyName=" + contact.company +
-                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-            statement.executeUpdate("UPDATE contacts SET phoneNumber=" + contact.phoneNumber +
-                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-            statement.executeUpdate("UPDATE contacts SET faxNumber=" + contact.faxNumber +
-                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-            statement.executeUpdate("UPDATE contacts SET email=" + contact.emailAddress +
-                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-            statement.executeUpdate("UPDATE contacts SET address=" + contact.streetAddress +
-                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-            statement.executeUpdate("UPDATE contacts SET city=" + contact.city +
-                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-            statement.executeUpdate("UPDATE contacts SET state=" + contact.state +
-                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-            statement.executeUpdate("UPDATE contacts SET zip=" + contact.zipCode +
-                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
-            statement.executeUpdate("UPDATE contacts SET notes=" + contact.notes +
-                    " WHERE rowid=" + lstContacts.getSelectedIndex() + ";");
+//        try {
+//            statement.executeUpdate("UPDATE contacts SET " +
+//                    "firstName= '" + contact.firstName + "', "+
+//                    "lastName= '" + contact.lastName + "', " +
+//                    "companyName= '" + contact.company+"', " +
+//                    "phoneNumber= '" + contact.phoneNumber+"', " +
+//                    "faxNumber= '" + contact.faxNumber+"', " +
+//                    "email= '" + contact.emailAddress+"', " +
+//                    "address= '" + contact.streetAddress+"', " +
+//                    "city= '" + contact.city+"', " +
+//                    "state= '" + contact.state+"', " +
+//                    "zip= '" + contact.zipCode+"', " +
+//                    "notes= '" + contact.notes + " WHERE rowid=" + lstContacts.getSelectedIndex() +";");
+//
+//            loadContactsList();
+//        } catch (SQLException e) {
+//
+//        }
 
-        } catch (SQLException e) {
 
-        }
     }
 
     /**
@@ -261,11 +256,11 @@ public class ContactsDB extends VirtualRolodex {
      */
     public void loadContactsList() throws SQLException {
         ResultSet results;
-
+        resortContacts();
         Statement statement = dbConnection.createStatement();
         String query = "SELECT companyName,firstName,lastName FROM contacts;";
+
         contactList.clear();
-        contactList.add("New Contact");
         try {
             results = statement.executeQuery(query);
             try {
@@ -276,6 +271,7 @@ public class ContactsDB extends VirtualRolodex {
                     contactList.add(company + ": " + last + ", " + first);
                 }
 
+                contactList.add(0,"New Contact");
                 fillList(contactList);
 
 
@@ -301,12 +297,11 @@ public class ContactsDB extends VirtualRolodex {
      */
     public void eraseFromDatabase(int index) throws SQLException {
         Statement statement = dbConnection.createStatement();
-        String deleteContact = "DELETE * from contacts WHERE rowid=" + index + ";";
-
+        String deleteContact = "DELETE FROM contacts WHERE rowid=" + index + ";";
 
         try {
             statement.executeUpdate(deleteContact);
-            contactList.remove(lstContacts.getSelectedIndex());
+            loadContactsList();
             resortContacts();
         } catch (SQLException e) {
             System.err.println("Trouble deleting from database " +
@@ -326,9 +321,7 @@ public class ContactsDB extends VirtualRolodex {
     public void resortContacts() throws SQLException {
         Statement statement = dbConnection.createStatement();
         String sortContents = "SELECT * FROM contacts ORDER BY companyName ASC;";
-
         String vacuumContents = "VACUUM contacts;";
-
 
         try {
             statement.executeUpdate(sortContents);
